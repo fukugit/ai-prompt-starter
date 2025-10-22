@@ -13,6 +13,7 @@ This tool primarily focuses on making your life ridiculously easy. Here's what y
 
 * **React Component Prompt:** A robustly structured Markdown template specifically for asking AI to generate React components (using TypeScript, Props, Styling, etc.).
 
+* **ReadMe Prompt:** A versatile, structured template designed to generate professional and engaging GitHub READMEs in Markdown format, based on the project's features and tech stack.
 
 ## 🛠️ Tech Stack (The Guts)
 
