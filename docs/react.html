@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Starter - Reactコンポーネント作成</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* カスタムスタイル: textareaのボーダーを濃くする */
+        #prompt-editor {
+            min-height: 70vh; /* 画面の高さの70%を確保 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-4 sm:p-8"> <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-lg p-6 sm:p-8"> <h1 class="text-3xl font-extrabold text-blue-700 mb-6 border-b-4 border-blue-500 pb-2">
+            📝 AIプロンプト Reactコンポーネント作成
+        </h1>
+
+        <p class="mb-4 text-gray-600">
+            編集内容は自動的にブラウザのローカルストレージに保存されます。
+        </p>
+
+        <textarea
+            id="prompt-editor"
+            class="w-full p-4 border-2 border-gray-300 focus:border-blue-500 rounded-lg text-gray-800 resize-y focus:ring-4 focus:ring-blue-200 transition duration-150 ease-in-out"
+            placeholder="ここにプロンプトの内容を入力してください..."
+        ></textarea>
+
+        <div class="mt-4 flex justify-between items-center">
+            <div class="flex gap-4">
+                <button
+                    id="save-button"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                >
+                    💾 更新して保存
+                </button>
+                <button
+                    id="reset-button"
+                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300"
+                >
+                    🔄 リセット
+                </button>
+                <a 
+                    href="index.html"
+                    class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-150 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300 flex items-center justify-center"
+                    id="index-button"
+                >
+                    🏠 トップへ戻る
+                </a>
+            </div>
+            
+            <p id="save-status" class="text-sm text-green-600 font-semibold opacity-0 transition-opacity duration-500">
+                保存しました！
+            </p>
+        </div>
+    </div>
+
+<script>
+        const editor = document.getElementById('prompt-editor');
+        const saveButton = document.getElementById('save-button');
+        const resetButton = document.getElementById('reset-button');
+        // const indexButton = document.getElementById('index-button'); // <a>タグなのでJS処理は不要
+        const saveStatus = document.getElementById('save-status');
+        const STORAGE_KEY = 'reactComponentPromptContent';
+
+        // ----------------------------------------------------
+        // 1. 初期プロンプトの定義 (変更なし)
+        // ----------------------------------------------------
+        const initialPrompt = `# Reactコンポーネント作成依頼
+
+## 目的
+<このコンポーネントの主な役割、達成したい目標を簡潔に記述>
+
+## コンポーネント名
+<ComponentName> (例: UserProfileCard, Button)
+
+## 使用する技術スタック
+- フレームワーク/ライブラリ: React, TypeScript
+- スタイリング: <CSS Modules, Styled-Components, Tailwind CSSなどの具体的な方法を記述>
+
+## 機能要件
+### 1. 動作・機能
+- <例: 親コンポーネントから渡されたデータを表示する>
+- <例: クリック時に特定の関数を実行する>
+
+### 2. Propsの定義
+| Prop名 | 型 | 説明 | 必須 | デフォルト値 |
+| :--- | :--- | :--- | :---: | :---: |
+| \`title\` | \`string\` | カードのタイトル | Yes | - |
+| \`onClick\` | \`() => void\` | ボタンクリック時の処理 | No | - |
+
+## デザイン・構造要件
+### 1. 表示要素
+- <例: タイトル (\`h2\`)>
+- <例: ボタン>
+
+### 2. スタイル・デザインの指示
+- <例: 全体のレイアウトはFlexboxを使用し、要素を中央揃えにする>
+
+## その他特記事項
+- <注意点、制約事項、特定のフックの使用などを記述>
+
+---
+
+### AIへの出力指示
+
+上記要件に基づき、以下の形式でコードを出力してください。
+
+1.  **TypeScript Interface/Type定義**
+2.  **コンポーネント本体のコード** (ファイル名: <ComponentName>.<tsx/jsx>)
+3.  **スタイリングコード** (必要な場合)`;
+
+        // ----------------------------------------------------
+        // 2. ページロード時の処理 (変更なし)
+        // ----------------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedContent = localStorage.getItem(STORAGE_KEY);
+            // localStorageに保存された内容があれば復元、なければ初期プロンプトを設定
+            editor.value = savedContent !== null ? savedContent : initialPrompt;
+        });
+
+        // ----------------------------------------------------
+        // 3. 保存ボタンのクリックイベント (変更なし)
+        // ----------------------------------------------------
+        saveButton.addEventListener('click', () => {
+            const contentToSave = editor.value;
+            localStorage.setItem(STORAGE_KEY, contentToSave);
+
+            saveStatus.textContent = '保存しました！';
+            saveStatus.classList.remove('opacity-0');
+            saveStatus.classList.add('opacity-100');
+
+            setTimeout(() => {
+                saveStatus.classList.remove('opacity-100');
+                saveStatus.classList.add('opacity-0');
+            }, 1500);
+        });
+
+        // ----------------------------------------------------
+        // 4. リセットボタンのクリックイベント (変更なし)
+        // ----------------------------------------------------
+        resetButton.addEventListener('click', () => {
+            if (confirm('現在の内容を破棄し、初期テンプレートに戻しますか？\n（保存内容も削除されます）')) {
+                editor.value = initialPrompt;
+                localStorage.removeItem(STORAGE_KEY);
+                
+                saveStatus.textContent = 'リセットしました！';
+                saveStatus.classList.remove('opacity-0');
+                saveStatus.classList.add('opacity-100');
+
+                setTimeout(() => {
+                    saveStatus.classList.remove('opacity-100');
+                    saveStatus.classList.add('opacity-0');
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
